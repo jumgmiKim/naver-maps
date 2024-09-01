@@ -1,33 +1,35 @@
 const express = require("express");
-const axios = require("axios")
+const axios = require("axios");
 const app = express();
+
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
-app.get("/get-dirctions", async (req, res) => {
-    const {start, goal, option} = req.query;
-
-    console.log("Query parameters :", {start, goal, option});
-
+app.get("/get-directions", async (req, res) => {
+    const { start, goal, option } = req.query;
+  
+    console.log("Query parameters:", { start, goal, option });
+  
     const url = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving";
     const headers = {
-        "X-NCP-APIGW-API-KEY-ID" : process.env.NAVER_CLIENT_ID,
-        "X-NCP-APIGW-API-KEY" : process.env.NAVER_CLIENT_SERCRET,
+      "X-NCP-APIGW-API-KEY-ID": process.env.NAVER_CLIENT_ID,
+      "X-NCP-APIGW-API-KEY": process.env.NAVER_CLIENT_SERCRET,
     };
-
-    console.log("Reqeust URL: ", url);
-    console.log("Reqeust Headers: ", headers);
+  
+    console.log("Request URL:", url);
+    console.log("Request headers:", headers);
 
     try {
-        const response = await axios.get(url,{
+        const response = await axios.get(url, {
             params: { start, goal, option },
             headers: headers,
-        });
-
-        console.log("Response status:", response.status);
-        console.log("Response data: ", response.data);
-
-        res.status(200).json(response.data);
+          });
+      
+          console.log("Response status:", response.status);
+          console.log("Response data: ", response.data);
+          // console.log("Response data:", JSON.stringify(response.data, null, 2));
+      
+          res.status(200).json(response.data);
     } catch(error) {
         console.error("Error:", error.message);
         if (error.response) {
@@ -37,7 +39,7 @@ app.get("/get-dirctions", async (req, res) => {
         error: error.message,
         details: error.response ? error.response.data : null,
         });
-    }
+  }
 });
 
 // For local development
